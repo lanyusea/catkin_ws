@@ -1,0 +1,5 @@
+<launch>
+  <node ns="apm" pkg="roscopter" type="driver.py" name="roscopter" output="screen" args="--device=/dev/ttyACM0 --baudrate=115200 --enable-rc-control=true">
+  </node>
+</launch>
+
