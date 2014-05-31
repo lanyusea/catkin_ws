@@ -12,7 +12,7 @@ find_package(catkin REQUIRED COMPONENTS
   sensor_msgs
   std_msgs
 )
-
+find_package( OpenCV REQUIRED )
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
 
@@ -99,6 +99,9 @@ catkin_package(
 include_directories(
   ${catkin_INCLUDE_DIRS}
 )
+include_directories(${OpenCV_INCLUDE_DIR})
+link_directories(${OpenCV_LIBRARY_DIR})
+link_libraries(${OpenCV_LIBS})
 
 ## Declare a cpp library
 # add_library(cvnode
@@ -106,17 +109,16 @@ include_directories(
 # )
 
 ## Declare a cpp executable
-# add_executable(cvnode_node src/cvnode_node.cpp)
+add_executable(cvgui src/cv.cpp)
 
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
 # add_dependencies(cvnode_node cvnode_generate_messages_cpp)
 
 ## Specify libraries to link a library or executable target against
-# target_link_libraries(cvnode_node
-#   ${catkin_LIBRARIES}
-# )
-
+ target_link_libraries(cvgui
+   ${catkin_LIBRARIES}
+ ${OpenCV_LIBS} )
 #############
 ## Install ##
 #############
