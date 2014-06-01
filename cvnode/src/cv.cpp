@@ -45,7 +45,7 @@ public:
     cv::Mat dst,detected_edges;
     cv::Mat src,src_gray;
     int edgeThresh = 1;
-    int lowThreshold;
+    int lowThreshold = 30;
     int const max_lowThreshold = 100;
     int ratio = 3;
     int kernel_size = 3;
@@ -54,6 +54,7 @@ public:
     {
       cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::BGR8);
       src = cv_ptr->image;
+
     }
 
     catch (cv_bridge::Exception& e)
@@ -86,8 +87,8 @@ public:
 
 int main(int argc, char** argv)
 {
-ros::init(argc, argv, "image_converter");
-ImageConverter ic;
-ros::spin();
-return 0;
+    ros::init(argc, argv, "image_converter");
+    ImageConverter ic;
+    ros::spin();
+    return 0;
 }
