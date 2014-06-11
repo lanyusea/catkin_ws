@@ -103,7 +103,7 @@ include_directories(
 # )
 
 ## Declare a cpp executable
-# add_executable(copterorder_node src/copterorder_node.cpp)
+add_executable(rc src/rc.cpp)
 
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
@@ -113,7 +113,7 @@ include_directories(
 # target_link_libraries(copterorder_node
 #   ${catkin_LIBRARIES}
 # )
-
+target_link_libraries(rc ${catkin_LIBRARIES})
 #############
 ## Install ##
 #############

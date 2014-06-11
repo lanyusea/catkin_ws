@@ -3,13 +3,65 @@
 #include "roscopter/APMCommand.h"
 #include "roscopter/SendWaypoint.h"
 #include "roscopter/SendWaypointList.h"
-#include "roscopter/XBEECommand.srv"
+#include "roscopter/XBEECommand.h"
 using namespace std;
 
-int command = 12;
+class CMD {
+    public:
+        CMD() {
+            mode = 12;
+        }
+        int getMode() {
+            return mode;
+        }
+        void changeCMD(int newCMD) {
+            if ((newCMD>=0)&&(newCMD<=12)){
+                mode = newCMD;
+                cout << "cmd updated" << endl;
+            }
+            else
+                cout << "invalid cmd" <<endl;
+        }
+        string getName(){
+            switch (mode){
+                case 1:
+                    return "LAUNCH";break;
+                case 2:
+                    return "LAND";break;
+                case 3:
+                    return "ARM";break;
+                case 4:
+                    return "DISARM";break;
+                case 5:
+                    return "SET MANUAL";break;
+                case 6:
+                    return "SET HOLD";break;
+                case 7:
+                    return "SET STABILIZE";break;
+                case 8:
+                    return "SET ALT_HOLD";break;
+                case 9:
+                    return "SET AUTO"; break;
+                case 10:
+                    return "SET LOITER"; break;
+                case 11:
+                    return "SET LAND";break;
+                case 12:
+                    return "RC control";break;
+            }
+        }
+    private:
+        int mode;
 
-void changeCMD(int newMode) {
-    command = newMode;
+};
+
+
+void publishCMD(ros::ServiceClient client, CMD cmd) {
+    roscopter::APMCommand srv;
+    srv.request.command = cmd.getMode();
+    if (client.call(srv)) {
+        ROS_INFO("Publish successful, mode: %s", cmd.getName().c_str());
+    }
 }
 
 int main(int argc, char ** argv)
@@ -17,11 +69,10 @@ int main(int argc, char ** argv)
     ros::init(argc,argv, "rf");
     ros::NodeHandle nh_;
     ros::Publisher pub_;
+    ros::ServiceClient commandClient = nh_.serviceClient<roscopter::APMCommand>("command");
+    CMD cmd;
 
-    ros::ServiceClient commandClient = n.serviceClient<roscopter::APMCommand>("command");
 
-    roscopter::APMCommand srv;
-    srv.request.command = command;
 
 //TODO:
 //ros::service::call /command for mode change
