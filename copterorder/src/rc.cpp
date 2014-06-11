@@ -67,10 +67,12 @@ void publishCMD(ros::ServiceClient client, CMD cmd) {
 int main(int argc, char ** argv)
 {
     ros::init(argc,argv, "rf");
-    ros::NodeHandle nh_;
-    ros::Publisher pub_;
-    ros::ServiceClient commandClient = nh_.serviceClient<roscopter::APMCommand>("command");
+    ros::NodeHandle nh;
+    ros::ServiceClient commandClient = nh.serviceClient<roscopter::APMCommand>("command");
     CMD cmd;
+
+    //ros::Publisher waypointPub = nh.advertise<roscopter::SendWaypoint>()
+    ros::ServiceClient waypointPub = nh.serviceClient<roscopter::SendWaypoint>("waypoint");
 
 
 
@@ -79,7 +81,6 @@ int main(int argc, char ** argv)
 //
 
 //TODO:
-//ros::service::call /waypoint to set destination
 //7param:https://github.com/epsilonorion/roscopter/wiki/Exploring-Waypoint-Control
 
 //TODO:
