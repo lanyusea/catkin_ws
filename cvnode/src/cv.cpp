@@ -15,15 +15,23 @@ static const std::string EDGE_WINDOW= "Edge Map";
 
 class ImageConverter
 {
-  ros::NodeHandle nh_;
+    ros::NodeHandle nh_;
     image_transport::ImageTransport it_;
     image_transport::Subscriber image_sub_;
     image_transport::Publisher image_pub_;
+    int iLowH = 75;
+    int iHighH = 130;
 
-public:
-  ImageConverter()
+    int iLowS = 150;
+    int iHighS = 255;
+
+    int iLowV = 60;
+    int iHighV = 255;
+
+    public:
+ImageConverter()
     : it_(nh_)
-  {
+{
     // Subscrive to input video feed and publish output video feed
     image_sub_ = it_.subscribe("/camera/image", 1,
       &ImageConverter::imageCb, this,image_transport::TransportHints("compressed"));
@@ -31,7 +39,7 @@ public:
 
     cv::namedWindow(OPENCV_WINDOW);
     cv::namedWindow(EDGE_WINDOW);
-  }
+}
 
   ~ImageConverter()
   {
@@ -63,15 +71,16 @@ public:
       return;
     }
 
-    // Draw an example circle on the video stream
-    //if (cv_ptr->image.rows > 60 && cv_ptr->image.cols > 60)
-    //      cv::circle(cv_ptr->image, cv::Point(50, 50), 10, CV_RGB(255,0,0));
+    createTrackbar("LowH", "Control", &iLowH, 179);
+    createTrackbar("HighH", "Control", &iHighH, 179);
 
-    // Update GUI Window
-    cv::imshow(OPENCV_WINDOW, cv_ptr->image);
+    createTrackbar("LowS", "Control", &iLowS, 255);
+    createTrackbar("HighS", "Control", &iHighS, 255);
 
-    // Output modified video stream
-    image_pub_.publish(cv_ptr->toImageMsg());
+    createTrackbar("LowV", "Control", &iLowV, 255);
+    createTrackbar("HighV", "Control", &iHighV, 255);
+
+
 
     dst.create(src.size(),src.type());
     cvtColor(src,src_gray,CV_BGR2GRAY);
@@ -80,6 +89,39 @@ public:
     dst = Scalar::all(0);
     src.copyTo( dst, detected_edges);
     imshow( EDGE_WINDOW, dst );
+
+
+
+    Mat imgHSV;
+    cvtColor(src, imgHSV, COLOR_BGR2HSV);
+    Mat imgThresholded;
+
+    inRange(imgHSV, Scalar(iLowH, iLowS, iLowV), Scalar(iHighH, iHighS, iHighV), imgThresholded); //Threshold the image
+
+    //morphological opening (removes small objects from the foreground)
+    erode(imgThresholded, imgThresholded, getStructuringElement(MORPH_ELLIPSE, Size(5, 5)) );
+    dilate( imgThresholded, imgThresholded, getStructuringElement(MORPH_ELLIPSE, Size(5, 5)) );
+
+    //morphological closing (removes small holes from the foreground)
+    dilate( imgThresholded, imgThresholded, getStructuringElement(MORPH_ELLIPSE, Size(5, 5)) );
+    erode(imgThresholded, imgThresholded, getStructuringElement(MORPH_ELLIPSE, Size(5, 5)) );
+
+    //Calculate the moments of the thresholded image
+    Moments oMoments = moments(imgThresholded);
+
+    double dM01 = oMoments.m01;
+    double dM10 = oMoments.m10;
+    double dArea = oMoments.m00;
+
+
+    imshow("Thresholded Image", imgThresholded); //show the thresholded image
+
+
+    // Update GUI Window
+    cv::imshow(OPENCV_WINDOW, cv_ptr->image);
+
+    // Output modified video stream
+    image_pub_.publish(cv_ptr->toImageMsg());
 
     cv::waitKey(3);
     }
