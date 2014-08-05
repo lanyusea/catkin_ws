@@ -45,9 +45,10 @@ int main(int argc, char** argv)
         outMsg.image = grayImg;
         //outMsg.image = colorImg;
         outMsg.header.stamp = ros::Time::now();
-        outMsg.encoding = "mono8";
+        outMsg.encoding = "mono16";
         /*
             possible encodings, use "rgb8" if publish color image directly
+            DO NOT use captain
             using sensor_msgs::image_encodings::RGB8;
             using sensor_msgs::image_encodings::RGBA8;
             using sensor_msgs::image_encodings::BGR8;
