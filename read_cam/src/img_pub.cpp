@@ -42,10 +42,10 @@ int main(int argc, char** argv)
         cap >> colorImg;
         cv::cvtColor(colorImg, grayImg, CV_RGB2GRAY);
         ROS_INFO("image height: %d, image width: %d\n", grayImg.rows, grayImg.cols);
-        outMsg.image = grayImg;
-        //outMsg.image = colorImg;
+        //outMsg.image = grayImg;
+        outMsg.image = colorImg;
         outMsg.header.stamp = ros::Time::now();
-        outMsg.encoding = "mono16";
+        outMsg.encoding = "bgr8";
         /*
             possible encodings, use "rgb8" if publish color image directly
             DO NOT use captain
