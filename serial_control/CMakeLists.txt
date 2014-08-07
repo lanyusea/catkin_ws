@@ -115,7 +115,7 @@ catkin_package(
 ## Your package locations should be listed before other locations
 # include_directories(include)
 include_directories(
-    #~/rospkg/ros_opentld/tld_msgs/msg_gen/cpp/include/tld_msgs/
+   ~/rospkg/ros_opentld/tld_msgs/msg_gen/cpp/include/tld_msgs/
   ${catkin_INCLUDE_DIRS}
 )
 
@@ -127,7 +127,7 @@ include_directories(
 ## Declare a cpp executable
 add_executable(serial_control src/main.cpp)
 
-target_link_libraries(serial_control serial)
+target_link_libraries(serial_control serial ${catkin_LIBRARIES})
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
 # add_dependencies(serial_control_node serial_control_generate_messages_cpp)
