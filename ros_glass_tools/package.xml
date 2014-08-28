@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<package>
+  <name>ros_glass_tools</name>
+  <version>1.0.0</version>
+  <description>The ros_glass_tools package - Provides ROS interface to Google Glass for topic
+        monitoring and robot voice control
+</description>
+
+  <!-- One maintainer tag required, multiple allowed, one person per tag --> 
+  <maintainer email="uav@cse.unl.edu">Nimbus Lab - CSE @ UNL</maintainer>
+
+
+  <license>Apache</license>
+
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>service_generation</build_depend> 
+  <build_depend>message_generation</build_depend> 
+  <build_depend>std_msgs</build_depend> 
+
+  <run_depend>service_runtime</run_depend>
+  <run_depend>message_runtime</run_depend>
+  <run_depend>std_msgs</run_depend> 
+
+</package>
